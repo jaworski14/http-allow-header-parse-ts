@@ -25,3 +25,10 @@ The trade-off: tokens not in the IANA registry throw an `Error` rather than bein
 ## Edge case to know
 
 An entirely blank or whitespace-only header returns an empty `Set` — the honest representation of "no methods advertised." An empty token between two commas (e.g. `GET,,POST`) is *not* treated as blank; it is treated as an unrecognized method and throws, because the empty string is not in the registry.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
